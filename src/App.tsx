@@ -5,10 +5,19 @@ import { Button } from "./components/button/Button";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [error, setError] = useState("");
 
   const updateCounter = (increase: boolean) => {
     setCount((currentValue) => {
-      return increase ? currentValue + 1 : currentValue - 1;
+      if (increase) {
+        setError("");
+        return currentValue + 1;
+      }
+      if (!increase && currentValue === 0) {
+        setError("A számláló nem mehet 0 alá!");
+        return currentValue;
+      }
+      return currentValue - 1;
     });
   };
 
@@ -20,6 +29,7 @@ function App() {
       <div className="container d-flex justify-content-center">
         <div className="card bg-white shadow text-center p-4 m-4">
           <h1>Counter: {count}</h1>
+          <p className="text-danger">{error}</p>
           <div className="d-flex justify-content-center flex-wrap gap-2">
             <Button color="primary" onClick={() => updateCounter(true)}>
               Increase +
