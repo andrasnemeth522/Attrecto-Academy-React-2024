@@ -13,6 +13,7 @@ import classes from "./UsersPage.module.scss";
 
 const UsersPage = () => {
   const [users, setUsers] = useState<UserModel[]>([]);
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const navigate = useNavigate();
 
   const fetchUsers = useCallback(async () => {
@@ -25,7 +26,15 @@ const UsersPage = () => {
 
   const goToUserPage = () => {
     navigate("/user");
-  }
+  };
+
+  const changeToArray = () => {
+    setViewMode("table");
+  };
+
+  const changeToCard = () => {
+    setViewMode("card");
+  };
 
   const handleDeleteUser = async (id: string | number) => {
     await userService.deleteUser(id);
@@ -41,33 +50,89 @@ const UsersPage = () => {
             Create User
           </Button>
         </div>
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+          <Button
+            color="secondary"
+            className="w-100 mb-3"
+            onClick={changeToArray}
+          >
+            Table
+          </Button>
+        </div>
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+          <Button
+            color="secondary"
+            className="w-100 mb-3"
+            onClick={changeToCard}
+          >
+            Card
+          </Button>
+        </div>
       </div>
-      <div className="row">
-        {users.map(({ id, name, image }) => (
-          <div className="col-12 col-sm-6 col-md-4 col-lg-3 my-1">
-            <Link
-              to={`/user/${id}`}
-              className={classNames("card", classes.UserCard)}
-            >
-              <img
-                src={image}
-                alt={`user #${id}`}
-                className={classNames("card-img-top", classes.UserImage)}
-              />
-              <div className="card-body">
-                <h5>{name}</h5>
-              </div>
-              <Button className={classes.DeleteIcon} onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleDeleteUser(id)
-              }}>
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>
-            </Link>
-          </div>
-        ))}
-      </div>
+
+      {viewMode === "table" ? (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(({ id, name, image }) => (
+              <tr key={id}>
+                <td>{id}</td>
+                <td>{name}</td>
+                <td>
+                  <img
+                    src={image}
+                    alt={`user #${id}`}
+                    className={classNames(classes.UserImage)}
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                </td>
+                <td>
+                  <Button onClick={() => handleDeleteUser(id)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="row">
+          {users.map(({ id, name, image }) => (
+            <div className="col-12 col-sm-6 col-md-4 col-lg-3 my-1" key={id}>
+              <Link
+                to={`/user/${id}`}
+                className={classNames("card", classes.UserCard)}
+              >
+                <img
+                  src={image}
+                  alt={`user #${id}`}
+                  className={classNames("card-img-top", classes.UserImage)}
+                />
+                <div className="card-body">
+                  <h5>{name}</h5>
+                </div>
+                <Button
+                  className={classes.DeleteIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDeleteUser(id);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </Page>
   );
 };
