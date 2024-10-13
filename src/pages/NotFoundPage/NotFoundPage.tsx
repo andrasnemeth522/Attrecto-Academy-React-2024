@@ -2,7 +2,7 @@ import React from 'react';
 
 function NotFoundPage() {
   return (
-    <div style={{ textAlign: 'center', marginTop: '250px' }}>
+    <div className="text-center p-4 m-4">
       <h1>404</h1>
       <p>Az oldal nem található!</p>
     </div>
