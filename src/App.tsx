@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import UsersPage from "./pages/UsersPage/UsersPage";
 import BadgesPage from "./pages/BadgesPage/BadgesPage";
 import { UserPage } from "./pages/UserPage/UserPage";
+import { BadgePage } from "./pages/BadgePage/BadgePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import { AUTH_TOKEN } from "./util/constants";
 import { getDataFromTokenModel } from "./util/token";
@@ -27,6 +28,7 @@ function App() {
   }
 
   const userRouteElement = role === "ADMIN" ? <UserPage /> : <Navigate to="/home" />;
+  const badgeRouteElement = role === "ADMIN" ? <BadgePage /> : <Navigate to="/home" />;
 
   return (
     <div className="App">
@@ -41,6 +43,8 @@ function App() {
           <Route path="user" element={userRouteElement} />
           <Route path="user/:id" element={userRouteElement} />
           <Route path="badges" element={<BadgesPage />} />
+          <Route path="badge" element={badgeRouteElement} />
+          <Route path="badge/:id" element={badgeRouteElement} />
 
           <Route path="/login" element={<Navigate to="/home" />} />
         </> : <>
